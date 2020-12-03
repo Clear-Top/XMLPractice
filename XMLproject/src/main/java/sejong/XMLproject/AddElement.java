@@ -34,7 +34,6 @@ public class AddElement {
 	public Element createChild(String nodeName, String nodeName2) {
 		Element child = createChild(nodeName);
 		child.appendChild(doc.createTextNode(nodeName2));
-
 		return child;
 	}
 
