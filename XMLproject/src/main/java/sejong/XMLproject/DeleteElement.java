@@ -49,14 +49,13 @@ public class DeleteElement {
 		}else {
 			root.removeChild(removeElement);
 			root.removeChild(removeElement_pair);
+			System.out.println();
+			System.out.println("<<삭제 후 root노드의 자식들...>>");
+			for(int i=0;i<children.getLength();i++) {
+				Node child = children.item(i);
+				System.out.println(child.getNodeName()+"  ["+i+"]");
+			}
 			JOptionPane.showMessageDialog(null, "성공적으로 삭제되었습니다.","삭제완료",JOptionPane.INFORMATION_MESSAGE);
-		}
-		
-		System.out.println();
-		System.out.println("<<삭제 후 root노드의 자식들...>>");
-		for(int i=0;i<children.getLength();i++) {
-			Node child = children.item(i);
-			System.out.println(child.getNodeName()+"  ["+i+"]");
 		}
 		saveFile();		// XML 파일로 저장
 	}
