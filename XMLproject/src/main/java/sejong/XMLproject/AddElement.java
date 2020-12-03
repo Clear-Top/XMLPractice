@@ -90,7 +90,6 @@ public class AddElement {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("go");
 		uri = "file:///C:\\XML01_MiniProject4_김현모_16011015.xml";
 		try {
 			new AddElement();
