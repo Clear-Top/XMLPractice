@@ -1,0 +1,36 @@
+#Load
+Loading Exsiting XML file.
+but, an error occurs when a file that doen't exist is loaded.
+#End
+
+#Make
+this is Make button
+#End
+
+#Find
+this is Find button
+#End
+
+#Save
+this is Save button
+#End
+
+#Print
+this is Print button
+#End
+
+#Insert
+this is Insert button
+#End
+
+#Update
+this is Update button
+#End
+
+#Delete
+this is Delete button
+#End
+
+#Exit
+this is Exit button
+#End
