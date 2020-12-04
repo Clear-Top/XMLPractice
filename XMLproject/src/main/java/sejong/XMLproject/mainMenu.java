@@ -22,13 +22,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author cndwj
+ * Load 	: O
+ * Make 	: 진행중... (루트노드만 만듦)
+ * Find 	: 진행중... (레이아웃 구성은 끝)
+ * Save 	: O
+ * Print	: X
+ * Insert 	: X
+ * Update	: X
+ * Delete	: X
+ * Exit		: O
+ * 
+ */
+
 public class mainMenu extends JFrame {
 
 	private static File explainFile = new File("explain.txt");
 	private static JButton[] btn = new JButton[10]; // 초기메뉴의 10가지 버튼생성
 	private static String[] btnName = { "Load", "Make", "Find", "Save", "Print", "Insert", "Update", "Delete", "Exit","Manual" };
 	private static JTextArea explanFunc = new JTextArea();
-	private static JLabel existLabel = new JLabel("현재 로딩중인 파일이 없습니다.");
+	public static JLabel existLabel = new JLabel("현재 로딩중인 파일이 없습니다.");
 	
 	public static Document doc=null;
 	
@@ -44,14 +59,14 @@ public class mainMenu extends JFrame {
 		paneNorth.setLayout(new GridLayout(3, 3, 5, 5));
 		paneSouth.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		existLabel.setFont(new Font("Dialog", Font.BOLD, 10));
+		existLabel.setFont(new Font("Dialog", Font.BOLD, 12));
 		existLabel.setForeground(Color.red);
 		paneSouth.add(existLabel);
 		// 위쪽&아래쪽 패널 내용
 		for (int i = 0; i < btn.length; i++) {
 			btn[i] = new JButton(btnName[i]);
 			btn[i].setSize(100, 50);
-			if (i == 9) { // 메뉴얼 버튼
+			if (i == 9) { // 메뉴얼 버튼	// 구현완료
 				btn[i].addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -62,7 +77,7 @@ public class mainMenu extends JFrame {
 				paneSouth.add(btn[i]);
 				continue;
 			}
-			if (i == 8) { // Exit 버튼
+			if (i == 8) { // Exit 버튼	// 구현완료
 				btn[i].setBackground(Color.gray);
 			}
 			btn[i].addMouseListener(new myMouse());
@@ -88,11 +103,20 @@ public class mainMenu extends JFrame {
 			// TODO Auto-generated method stub
 			JButton btn = (JButton) e.getSource();
 			if (btn.getText().equals("Exit")) {
-				int num = JOptionPane.showConfirmDialog(null, "정말로 종료하시겠습니까?", "종료창", JOptionPane.YES_NO_OPTION);
-				if (num == JOptionPane.YES_OPTION) {
-					System.exit(0);
+				try {
+					if(doc!=null) {
+						new SaveMenu();
+					}else {
+						int num = JOptionPane.showConfirmDialog(null, "정말로 종료하시겠습니까?", "종료창", JOptionPane.YES_NO_OPTION);
+						if (num == JOptionPane.YES_OPTION) {
+							System.exit(0);
+						}
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-			} else if (btn.getText().equals("Load")) {
+			} else if (btn.getText().equals("Load")) {	//구현완료
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
 				Loadmenu load = new Loadmenu();
 				load.addWindowListener(new WindowAdapter() {
@@ -106,25 +130,63 @@ public class mainMenu extends JFrame {
 				});
 			} else if (btn.getText().equals("Make")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				try {
+					if(doc!=null) {
+						new SaveMenu();
+					}
+					MakeMenu make = new MakeMenu();
+					make.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosed(WindowEvent arg0) {
+							// TODO Auto-generated method stub
+							if(doc!=null) {
+								existLabel.setText("로딩되었습니다.");
+							}
+						}
+					});
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} else if (btn.getText().equals("Find")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
-				// doc로 잘 로딩됐는지 확인
-				Node root = doc.getDocumentElement(); // root 노드 리턴
-				NodeList children = root.getChildNodes(); // root 노드의 자식들 리턴(n개)
-				for (int i = 0; i < children.getLength(); i++) {
-					Node node = children.item(i);
-					System.out.println(node.getNodeName());
+				if(doc==null) {
+					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}else {
+					FindMenu find = new FindMenu();
 				}
 			} else if (btn.getText().equals("Save")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				try {
+					if(doc==null) {
+						JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+					}else {
+						SaveMenu save = new SaveMenu();
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} else if (btn.getText().equals("Print")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				if(doc==null) {
+					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}
 			} else if (btn.getText().equals("Insert")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				if(doc==null) {
+					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}
 			} else if (btn.getText().equals("Update")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				if(doc==null) {
+					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}
 			} else if (btn.getText().equals("Delete")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				if(doc==null) {
+					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 
