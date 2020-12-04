@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="realXSL.xsl"?>
+
+<supervisor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.ConvenienceStore.org realXSD.xsd"
+            xmlns="http://www.ConvenienceStore.org"
+            xmlns:em="http://www.employee.org"
+            xmlns:it="http://www.item.org">
+  <!--8 regions-->
+  <region>
+    <!-- 고양 -->
+    <reg_name>고양</reg_name>
+    <store id="1">
+      <sto_name>고양현대점</sto_name>
+      <manage_name age="24" sex="male">김현모</manage_name>
+      <sto_tel>031-963-6216</sto_tel>
+      <address>고양동 240-8</address>
+      <em:employee id="1">
+        <em:em_name age="24" sex="male">김진모</em:em_name>
+        <em:figure src="img/man1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>010-2440-4905</em:em_tel>
+        <em:workingDate>120</em:workingDate>
+        <em:workingType>평일 주간</em:workingType>
+      </em:employee>
+      <em:employee id="2">
+        <em:em_name sex="female">김송미</em:em_name>
+        <em:figure src="img/woman1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>031-5016-7163</em:em_tel>
+        <em:workingDate>36</em:workingDate>
+        <em:workingType>주말 야간</em:workingType>
+      </em:employee>
+      <profit>
+        <min_profit>1200</min_profit>
+        <max_profit>80</max_profit>
+      </profit>
+      <hotItem>
+        <item id ="1">
+          <it_name>꼬북칩 초코츄러스</it_name>
+          <kind>Snack</kind>
+          <company>해태</company>
+          <it:salenum>2</it:salenum>
+          <it:figure src="img/snack1.jpg" width="100px" height="100px" alt="핫한과자"/>
+        </item>
+        <item id="2">
+          <it_name>수수깡 젤리</it_name>
+          <kind>Jelly</kind>
+          <company>츄파춥스</company>
+          <it:salenum>1.2</it:salenum>
+          <it:figure src="img/snack2.jpg" width="100px" height="100px" alt="핫한젤리"/>
+        </item>
+      </hotItem>
+    </store>
+  </region>
+  
+  <region>
+    <!-- 양주 -->
+    <reg_name>양주</reg_name>
+    <store id="1">
+      <sto_name>양주덕정점</sto_name>
+      <manage_name age="32" sex="male">홍길동</manage_name>
+      <sto_tel>031-123-4567</sto_tel>
+      <address>고암동 145-1</address>
+      <em:employee id="1">
+        <em:em_name age="32" sex="female">임꺽정</em:em_name>
+        <em:figure src="img/man1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>010-8896-1123</em:em_tel>
+        <em:workingDate>120</em:workingDate>
+        <em:workingType>평일 주간</em:workingType>
+      </em:employee>
+      <em:employee id="2">
+        <em:em_name sex="male">김사또</em:em_name>
+        <em:figure src="img/woman1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>031-9963-7745</em:em_tel>
+        <em:workingDate>36</em:workingDate>
+        <em:workingType>주말 야간</em:workingType>
+      </em:employee>
+      <profit>
+        <min_profit>1200</min_profit>
+        <max_profit>80</max_profit>
+      </profit>
+      <hotItem>
+        <item id ="1">
+          <it_name>마카롱</it_name>
+          <kind>Snack</kind>
+          <company>편돌이네</company>
+          <it:salenum>5</it:salenum>
+          <it:figure src="img/snack1.jpg" width="100px" height="100px" alt="핫한후식"/>
+        </item>
+        <item id="2">
+          <it_name>블랙신라면</it_name>
+          <kind>라면</kind>
+          <company>농심</company>
+          <it:salenum>0.9</it:salenum>
+          <it:figure src="img/snack2.jpg" width="100px" height="100px" alt="핫한라면"/>
+        </item>
+      </hotItem>
+    </store>
+  </region>
+</supervisor>
