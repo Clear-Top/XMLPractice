@@ -2,6 +2,10 @@ package sejong.XMLproject;
 
 import javax.swing.*;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.util.Scanner;
 
 import java.awt.*;
@@ -22,22 +26,27 @@ public class mainMenu extends JFrame {
 
 	private static File explainFile = new File("explain.txt");
 	private static JButton[] btn = new JButton[10]; // 초기메뉴의 10가지 버튼생성
-	private static String[] btnName = { "Load", "Make", "Find", "Save", "Print", "Insert", "Update", "Delete", "Exit",
-			"Manual" };
-	private static JTextArea explanFunc = new JTextArea(7, 20);
-
+	private static String[] btnName = { "Load", "Make", "Find", "Save", "Print", "Insert", "Update", "Delete", "Exit","Manual" };
+	private static JTextArea explanFunc = new JTextArea();
+	private static JLabel existLabel = new JLabel("현재 로딩중인 파일이 없습니다.");
+	
+	public static Document doc=null;
+	
 	public mainMenu(String title) {
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
-		c.setLayout(new BorderLayout(20, 20)); // 위쪽에는 Load~Exit버튼, 아래쪽에는 메뉴얼버튼
+		c.setLayout(new BorderLayout(20, 10)); // 위쪽에는 Load~Exit버튼, 아래쪽에는 메뉴얼버튼
 
 		JPanel paneNorth = new JPanel(); // 위쪽에 배치할 패널 (Load~Exit)
 		JPanel paneSouth = new JPanel(); // 아래쪽에 배치할 패널 (메뉴얼버튼)
 
 		paneNorth.setLayout(new GridLayout(3, 3, 5, 5));
-		paneSouth.setLayout(new FlowLayout());
+		paneSouth.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+		existLabel.setFont(new Font("Dialog", Font.BOLD, 10));
+		existLabel.setForeground(Color.red);
+		paneSouth.add(existLabel);
 		// 위쪽&아래쪽 패널 내용
 		for (int i = 0; i < btn.length; i++) {
 			btn[i] = new JButton(btnName[i]);
@@ -59,11 +68,14 @@ public class mainMenu extends JFrame {
 			btn[i].addMouseListener(new myMouse());
 			paneNorth.add(btn[i]);
 		}
+		
 		c.add(paneNorth, BorderLayout.NORTH);
 		c.add(paneSouth, BorderLayout.SOUTH);
 
 		// 가운데 텍스트area 내용
 		c.add(new JScrollPane(explanFunc));
+
+		explanFunc.setEditable(false);
 
 		setSize(400, 400);
 		setVisible(true);
@@ -74,12 +86,45 @@ public class mainMenu extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			JButton btn = (JButton)e.getSource();
-			if(btn.getText().equals("Exit")) {
-				int num = JOptionPane.showConfirmDialog(null, "정말로 종료하시겠습니까?","종료창",JOptionPane.YES_NO_OPTION);
-				if(num==JOptionPane.YES_OPTION) {
+			JButton btn = (JButton) e.getSource();
+			if (btn.getText().equals("Exit")) {
+				int num = JOptionPane.showConfirmDialog(null, "정말로 종료하시겠습니까?", "종료창", JOptionPane.YES_NO_OPTION);
+				if (num == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
+			} else if (btn.getText().equals("Load")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				Loadmenu load = new Loadmenu();
+				load.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosed(WindowEvent arg0) {
+						// TODO Auto-generated method stub
+						if(doc!=null) {
+							existLabel.setText("로딩되었습니다.");
+						}
+					}
+				});
+			} else if (btn.getText().equals("Make")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+			} else if (btn.getText().equals("Find")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+				// doc로 잘 로딩됐는지 확인
+				Node root = doc.getDocumentElement(); // root 노드 리턴
+				NodeList children = root.getChildNodes(); // root 노드의 자식들 리턴(n개)
+				for (int i = 0; i < children.getLength(); i++) {
+					Node node = children.item(i);
+					System.out.println(node.getNodeName());
+				}
+			} else if (btn.getText().equals("Save")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+			} else if (btn.getText().equals("Print")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+			} else if (btn.getText().equals("Insert")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+			} else if (btn.getText().equals("Update")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
+			} else if (btn.getText().equals("Delete")) {
+				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
 			}
 		}
 
@@ -105,13 +150,13 @@ public class mainMenu extends JFrame {
 			BufferedReader rd = new BufferedReader(fd);
 			String line = "";
 			if (func.equals("all")) {
-				System.out.println(func + "로 호출");
+//				System.out.println(func + "로 호출");
 				Scanner scan = new Scanner(explainFile);
-				while(scan.hasNextLine()) {
-					Manual.ta.append(scan.nextLine()+"\n");
+				while (scan.hasNextLine()) {
+					Manual.ta.append(scan.nextLine() + "\n");
 				}
 			} else {
-				System.out.println(func + "로 호출");
+//				System.out.println(func + "로 호출");
 				while ((line = rd.readLine()) != null) {
 					if (line.equals("#" + func)) {
 						String str = "";
@@ -162,6 +207,8 @@ class Manual extends JFrame {
 		panel.add(btn);
 		c.add(new JScrollPane(ta), BorderLayout.CENTER);
 		c.add(panel, BorderLayout.SOUTH);
+
+		ta.setEditable(false);
 
 		setSize(500, 600);
 		setVisible(true);
