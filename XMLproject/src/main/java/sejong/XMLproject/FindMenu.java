@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.w3c.dom.Node;
@@ -26,6 +30,9 @@ public class FindMenu extends JFrame{
 	private static JButton btn = new JButton("검색");
 	public static JPanel panel2 = new JPanel();
 	public static Container c;
+	public static JLabel showLa = new JLabel();
+	public static JTextArea ta = new JTextArea(20,30);
+	public static NodeList selectedNodeChildren=null;
 	
 	public FindMenu() {
 		setTitle("Find");
@@ -85,7 +92,7 @@ public class FindMenu extends JFrame{
 		c.add(panel2,BorderLayout.CENTER);
 		c.add(panel3,BorderLayout.SOUTH);
 		
-		setSize(500,400);
+		setSize(500,600);
 		setVisible(true);
 	}
 	
@@ -111,7 +118,8 @@ public class FindMenu extends JFrame{
 				String parentNodeName = child.getParentNode().getNodeName();
 				int depth = depth(child);
 				int sibling = sibling(child);
-				JButton ne = new structNode(nodeName, nodeValue, parentNodeName, nodeType,depth,sibling);
+				selectedNodeChildren = child.getChildNodes();
+				JButton ne = new structNode(selectedNodeChildren,nodeName, nodeValue, parentNodeName, nodeType,depth,sibling);
 				panel2.add(ne);
 				ne.repaint();
 			}
@@ -130,6 +138,8 @@ public class FindMenu extends JFrame{
 	public int sibling(Node node) {
 		int index=1;
 		while((node=node.getPreviousSibling())!=null) {
+			if(node.getNodeType()==Node.TEXT_NODE)
+				continue;
 			index++;
 		}
 		return index;
@@ -143,7 +153,8 @@ class structNode extends JButton{
 	static String parentNodeName;
 	static int depth;
 	static int sibling;
-	public structNode(String nodeName, String nodeValue, String parentNodeName, short nodeType, int depth, int sibling){
+	
+	public structNode(NodeList children,String nodeName, String nodeValue, String parentNodeName, short nodeType, int depth, int sibling){
 		this.nodeName = nodeName;
 		this.nodeValue = nodeValue;
 		this.nodeType = nodeType;
@@ -153,24 +164,57 @@ class structNode extends JButton{
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				System.out.print("노드종류 : ");
+				FindMenu.ta.setText("");
+				String str = "노드종류 : ";
 				if(nodeType==Node.ELEMENT_NODE) {
-					System.out.println("ELEMENT_NODE");
+					str+="ELEMENT";
 				}else if(nodeType==Node.TEXT_NODE) {
-					System.out.println("TEXT_NODE");
+					str+="TEXT";
 				}else if(nodeType==Node.COMMENT_NODE) {
-					System.out.println("COMMENT_NODE");
+					str+="COMMENT";
 				}else if(nodeType==Node.ATTRIBUTE_NODE) {
-					System.out.println("ATTRIBUTE_NODE");
+					str+="ATTRIBUTE";
 				}
-				System.out.println("노드이름 :"+nodeName);
-				System.out.println("노드 값 : "+nodeValue);
-				System.out.println("부모노드이름 : "+parentNodeName);
-				System.out.println("root로부터 깊이 : "+depth);
-				System.out.println("몇번째 자식 : "+sibling);
+				
+				str+="\n\n";
+				str+="노드이름 :"+nodeName+"\n\n";
+				str+="노드 값 : "+nodeValue+"\n\n";
+				str+="부모노드이름 : "+parentNodeName+"\n\n";
+				str+="root로부터 깊이 : "+depth+"\n\n";
+				str+="몇번째 자식 : "+sibling+"\n\n";
+				str+="자식앨리먼트 개수(공백텍스트제외) : "+countChild(children)+"\n\n";
+				str+="자식앨리먼트\n";
+				FindMenu.ta.setText(str);
+				showChildren(children);
+				FindMenu.ta.setFont(new Font("Serif",Font.BOLD,14));
+				FindMenu.ta.setForeground(Color.BLACK);
+				FindMenu.ta.setEditable(false);
+				JScrollPane scroll = new JScrollPane(FindMenu.ta);
+				FindMenu.panel2.add(scroll);
+				FindMenu.panel2.validate();
+				FindMenu.panel2.repaint();
 			}
 		});
-		
-		System.out.println(nodeName+"생성완료!");
+//		System.out.println(nodeName+"생성완료!");
+	}
+	
+	public int countChild(NodeList childs) {
+		int index=0;
+		for(int i=0;i<childs.getLength();i++) {
+			Node item = childs.item(i);
+			if(item.getNodeType()==Node.COMMENT_NODE||item.getNodeType()==Node.ATTRIBUTE_NODE||item.getNodeType()==Node.TEXT_NODE)
+				continue;
+			index++;
+		}
+		return index;
+	}
+	
+	public void showChildren(NodeList childs) {
+		for(int i=0;i<childs.getLength();i++) {
+			Node item = childs.item(i);
+			if(item.getNodeType()==Node.COMMENT_NODE||item.getNodeType()==Node.ATTRIBUTE_NODE||item.getNodeType()==Node.TEXT_NODE)
+				continue;
+			FindMenu.ta.append(item.getNodeName()+"\n");
+		}
 	}
 }
