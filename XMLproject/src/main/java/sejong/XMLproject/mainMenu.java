@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Make 	: 진행중... (루트노드만 만듦)
  * Find 	: 진행중... (Element검색완료)
  * Save 	: O
- * Print	: X
+ * Print	: O
  * Insert 	: X
  * Update	: X
  * Delete	: X
@@ -171,6 +171,8 @@ public class mainMenu extends JFrame {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
 				if(doc==null) {
 					JOptionPane.showMessageDialog(null, "로딩이 필요합니다.","Error",JOptionPane.ERROR_MESSAGE);
+				}else {
+					PrintMenu print = new PrintMenu();
 				}
 			} else if (btn.getText().equals("Insert")) {
 				System.out.println(btn.getText() + "버튼을 클릭했습니다.");
