@@ -57,7 +57,7 @@ public class DeleteElement {
 			}
 			JOptionPane.showMessageDialog(null, "성공적으로 삭제되었습니다.","삭제완료",JOptionPane.INFORMATION_MESSAGE);
 		}
-		saveFile();		// XML 파일로 저장
+		saveFile();		// XML 파일로 저장	
 	}
 	
 	private void saveFile() throws IOException {
