@@ -97,6 +97,7 @@ public class Loadmenu extends JFrame {
 					JOptionPane.YES_NO_OPTION);
 			if (num == JOptionPane.YES_OPTION) {
 				try {
+					mainMenu.doc=null;
 					DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
 					DocumentBuilder builder = fac.newDocumentBuilder();
 					String direct = dir.getAbsolutePath().toString();
