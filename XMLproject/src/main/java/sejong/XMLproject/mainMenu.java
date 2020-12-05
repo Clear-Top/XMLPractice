@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * @author cndwj
  * Load 	: O
  * Make 	: 진행중... (루트노드만 만듦)
- * Find 	: 진행중... (레이아웃 구성은 끝)
+ * Find 	: 진행중... (Element검색완료)
  * Save 	: O
  * Print	: X
  * Insert 	: X
