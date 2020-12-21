@@ -5,8 +5,12 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,12 +18,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 public class InsertMenu extends JFrame{
 	public static Document doc = mainMenu.doc;
@@ -28,6 +37,10 @@ public class InsertMenu extends JFrame{
 	public static JPanel southPanel = new JPanel();
 	private static String[] nodeName = {"Element","Attribute","Comment","Text"};
 	public static JComboBox<String> cb = new JComboBox<String>(nodeName);
+	public JButton backBtn;
+	public JButton resetBtn;
+	public JButton startBtn;
+	public JButton cancelBtn;
 	
 	public static Node currentNodePointer = root;
 	public static Node currentSelectPoint = null;
@@ -41,9 +54,10 @@ public class InsertMenu extends JFrame{
 		southPanel.setLayout(new FlowLayout());
 		
 		// 루트노드부터 시작
-		JButton backBtn = new JButton("부모로 이동");
-		JButton resetBtn = new JButton("초기화");
-		JButton startBtn = new JButton("조회");
+		backBtn = new JButton("부모로 이동");
+		resetBtn = new JButton("초기화");
+		startBtn = new JButton("조회");
+		cancelBtn = new JButton("나가기");
 		
 		backBtn.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -76,9 +90,36 @@ public class InsertMenu extends JFrame{
 			}
 		});
 		
+		cancelBtn.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+			}
+		});
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				southPanel.removeAll();
+				southPanel.revalidate();
+				southPanel.repaint();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				southPanel.removeAll();
+				southPanel.revalidate();
+				southPanel.repaint();
+			}
+		});
+			
+			
+		
 		southPanel.add(backBtn);
 		southPanel.add(startBtn);
 		southPanel.add(resetBtn);
+		southPanel.add(cancelBtn);
 		
 		c.add(northPanel,BorderLayout.CENTER);
 		c.add(southPanel,BorderLayout.SOUTH);
@@ -224,51 +265,93 @@ public class InsertMenu extends JFrame{
 				width=250;
 				height=100;
 			}else if(msg.equals("Attribute")) {
-				width=200;
-				height=300;
+				paCenter.setLayout(new FlowLayout());
+				JLabel la1 = new JLabel("속성이름");
+				JTextField tf1 = new JTextField(15);
+				JLabel la2 = new JLabel("속성값");
+				JTextField tf2 = new JTextField(15);
+				
+				paCenter.add(la1);
+				paCenter.add(tf1);
+				paCenter.add(la2);
+				paCenter.add(tf2);
+				okBtn.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						NodeList children = currentNodePointer.getChildNodes();	//현재부모노드의 자식들 리턴
+						((Element)children.item(index)).setAttribute(tf1.getText(), tf2.getText());
+//						System.out.println(tf1.getText()+"   "+tf2.getText());
+						JOptionPane.showMessageDialog(null, "성공적으로 삽입되었습니다.\n\"초기화\" 후 \"조회\"를 눌러주세요");
+						dispose();
+					}
+				});
+				width=500;
+				height=100;
 			}else if(msg.equals("Comment")) {
-				width=100;
-				height=100;
+				paCenter.setLayout(new BorderLayout(30,20));
+				JLabel la = new JLabel("<html><br/>주석내용</html>");
+				la.setHorizontalAlignment(SwingConstants.CENTER);
+				la.setFont(new Font("SansSerif", Font.BOLD, 20));
+				JTextArea ta = new JTextArea();
+				ta.setFont(new Font("Gothic",Font.BOLD,15));
+				paCenter.add(la,BorderLayout.NORTH);
+				paCenter.add(new JScrollPane(ta),BorderLayout.CENTER);
+				okBtn.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+//						String str = ((JButton)e.getSource()).getText();
+//						System.out.println(str);
+//						System.out.println("\""+tf.getText()+"\"라는 이름을 가진 노드를 ");
+//						System.out.println("\""+root.getNodeName()+"\"노드의 자식으로 삽입! 그리고 \""+index+"\"번째 자식으로 삽입!");
+						NodeList children = currentNodePointer.getChildNodes();	//현재부모노드의 자식들 리턴
+						Comment comment = doc.createComment(ta.getText());
+//						System.out.println(ta.getText());
+//						System.out.println(index);
+						if(index==0) {
+							currentNodePointer.insertBefore(comment, children.item(index));
+							currentNodePointer.insertBefore(doc.createTextNode("\n"), children.item(0));
+						}else if(children.item(index).getNodeType()==Node.TEXT_NODE) {
+							currentNodePointer.insertBefore(comment, children.item(index));
+							currentNodePointer.insertBefore(doc.createTextNode("\n"), children.item(index));
+						}else {
+							currentNodePointer.insertBefore(doc.createTextNode("\n"), children.item(index));
+							currentNodePointer.insertBefore(comment, children.item(index));
+						}
+						JOptionPane.showMessageDialog(null, "성공적으로 삽입되었습니다.\n\"초기화\" 후 \"조회\"를 눌러주세요");
+						dispose();
+					}
+				});
+				width=400;
+				height=400;
 			}else if(msg.equals("Text")) {
-				width=100;
-				height=100;
+				paCenter.setLayout(new BorderLayout(30,20));
+				JLabel la = new JLabel("<html><br/>Text</html>");
+				la.setHorizontalAlignment(SwingConstants.CENTER);
+				la.setFont(new Font("SansSerif", Font.BOLD, 20));
+				
+				JTextArea ta = new JTextArea();
+				ta.setFont(new Font("Gothic",Font.BOLD,15));
+				paCenter.add(la,BorderLayout.NORTH);
+				paCenter.add(new JScrollPane(ta),BorderLayout.CENTER);
+				okBtn.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						NodeList children = currentNodePointer.getChildNodes();
+						Text textNode = doc.createTextNode(ta.getText());
+						children.item(index).appendChild(textNode);
+						JOptionPane.showMessageDialog(null, "성공적으로 삽입되었습니다.\n\"초기화\" 후 \"조회\"를 눌러주세요");
+						dispose();
+					}
+				});
+				width=400;
+				height=400;
 			}
 			
 			this.add(paCenter,BorderLayout.CENTER);
 			this.add(paSouth,BorderLayout.SOUTH);
 			
+			setResizable(false);
 			setSize(width,height);
 			setVisible(true);
 		}
 	}
-//	public class Attribute extends JFrame{
-//		Attribute(String msg){
-////			System.out.println("속성 클래스 생성완료");
-//			setTitle("Attribute");
-//			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//			setSize(250,400);
-//			setVisible(true);
-//		}
-//	}
-//	public class Comment extends JFrame{
-//		Comment(String msg){
-////			System.out.println("주석 클래스 생성완료");
-//			setTitle("Comment");
-//			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//			setSize(150,200);
-//			setVisible(true);
-//		}
-//	}
-//	public class Text extends JFrame{
-//		Text(String msg){
-////			System.out.println("텍스트 클래스 생성완료");
-//			setTitle("Text");
-//			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//			setSize(150,200);
-//			setVisible(true);
-//		}
-//	}
-	// 선택입력창
 	
 	public int sibling(Node node) {
 		int index=1;

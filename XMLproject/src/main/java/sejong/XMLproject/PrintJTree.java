@@ -34,7 +34,7 @@ import org.xml.sax.SAXParseException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 
-public class DomEcho02 extends JPanel {
+public class PrintJTree extends JPanel {
 	static Document document;
 	static final int windowHeight = 460;
 	static final int leftWidth = 300;
@@ -43,71 +43,24 @@ public class DomEcho02 extends JPanel {
 	static final String[] typeName = { "none", "Element", "Attr", "Text", "CDATA", "EntityRef", "Entity", "ProcInstr",
 			"Comment", "Document", "DocType", "DocFragment", "Notation", };
 
-	public DomEcho02() {
-		// Make a nice border
-//		EmptyBorder eb = new EmptyBorder(5, 5, 5, 5);
-//		BevelBorder bb = new BevelBorder(BevelBorder.LOWERED);
-//		CompoundBorder CB = new CompoundBorder(eb, bb);
-//		this.setBorder(new CompoundBorder(CB, eb));
-
-		// Set up the tree
+	public PrintJTree(Document document) {
+		this.document = document;
+		
 		JTree tree = new JTree(new DomToTreeModelAdapter());
 
-		// Build left-side view
 		JScrollPane treeView = new JScrollPane(tree);
 		treeView.setPreferredSize(new Dimension(leftWidth, windowHeight));
 
-		// Build right-side view
-		JTextArea htmlPane = new JTextArea();
-		
-		htmlPane.setEditable(false);
-		JScrollPane htmlView = new JScrollPane(htmlPane);
-		htmlView.setPreferredSize(new Dimension(rightWidth, windowHeight));
-
-		// Build split-pane view
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeView, htmlView);
-		splitPane.setContinuousLayout(true);
-		splitPane.setDividerLocation(leftWidth);
-		splitPane.setPreferredSize(new Dimension(windowWidth + 10, windowHeight + 10));
-
-		// Add GUI components
 		this.setLayout(new BorderLayout());
-		this.add("Center", splitPane);
+		this.add("Center", treeView);
 
-	}
-
-	public static void main(String argv[]) {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			document = builder
-					.parse(new File("C:\\Users\\cndwj\\OneDrive\\바탕 화면\\XML01_MiniProject4_김현모_16011015.xml"));
-			makeFrame();
-		} catch (SAXParseException spe) {
-			System.out.println("에러...");
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public static void makeFrame() {
-		// Set up a GUI framework
-		JFrame frame = new JFrame("DOM Echo");
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+		JFrame frame = new JFrame("Print for JTree");
+		frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
 
-		// Set up the tree, the views, and display it all
-		final DomEcho02 echoPanel = new DomEcho02();
+		final PrintJTree echoPanel = new PrintJTree(document);
 		frame.getContentPane().add("Center", echoPanel);
 		frame.pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -121,13 +74,10 @@ public class DomEcho02 extends JPanel {
 	public class AdapterNode {
 		org.w3c.dom.Node domNode;
 
-		// Construct an Adapter node from a DOM node
 		public AdapterNode(org.w3c.dom.Node node) {
 			domNode = node;
 		}
 
-		// Return a string that identifies this node
-		// in the tree
 		public String toString() {
 			String s = typeName[domNode.getNodeType()];
 			String nodeName = domNode.getNodeName();
@@ -140,8 +90,6 @@ public class DomEcho02 extends JPanel {
 				else
 					s += ": ";
 
-				// Trim the value to get rid of NL's
-				// at the front
 				String t = domNode.getNodeValue().trim();
 				int x = t.indexOf("\n");
 				if (x >= 0)
@@ -152,7 +100,6 @@ public class DomEcho02 extends JPanel {
 		}
 
 		public int index(AdapterNode child) {
-			// System.err.println("Looking for index of " + child);
 			int count = childCount();
 			for (int i = 0; i < count; i++) {
 				AdapterNode n = this.child(i);
@@ -163,7 +110,6 @@ public class DomEcho02 extends JPanel {
 		}
 
 		public AdapterNode child(int searchIndex) {
-			// Note: JTree index is zero-based.
 			org.w3c.dom.Node node = domNode.getChildNodes().item(searchIndex);
 			return new AdapterNode(node);
 		}
@@ -175,15 +121,11 @@ public class DomEcho02 extends JPanel {
 	}
 
 	public class DomToTreeModelAdapter implements javax.swing.tree.TreeModel {
-		// Basic TreeModel operations
 		public Object getRoot() {
-			// System.err.println("Returning root: " +document);
 			return new AdapterNode(document);
 		}
 
 		public boolean isLeaf(Object aNode) {
-			// Determines whether the icon shows up to the left.
-			// Return true for any node with no children
 			AdapterNode node = (AdapterNode) aNode;
 			if (node.childCount() > 0)
 				return false;
@@ -205,11 +147,7 @@ public class DomEcho02 extends JPanel {
 			return node.index((AdapterNode) child);
 		}
 
-		public void valueForPathChanged(TreePath path, Object newValue) {
-			// Null. We won't be making changes in the GUI
-			// If we did, we would ensure the new value was
-			// really new and then fire a TreeNodesChanged event.
-		}
+		public void valueForPathChanged(TreePath path, Object newValue) {}
 
 		private Vector listenerList = new Vector();
 

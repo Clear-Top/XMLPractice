@@ -48,6 +48,8 @@ public class Loadmenu extends JFrame {
 	private static String selectedFile = "";
 	
 	public Loadmenu() {
+		cb.insertItemAt("선택하세요.", 0);
+		cb.setSelectedIndex(0);
 		setTitle("Loading");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		Container c = getContentPane();

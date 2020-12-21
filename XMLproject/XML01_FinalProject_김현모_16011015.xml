@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="realXSL.xsl"?>
+<?xml-stylesheet type="text/xsl" href="XML01_FinalProject_김현모_16011015.xsl"?>
 
 <supervisor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.ConvenienceStore.org realXSD.xsd"
@@ -92,6 +92,50 @@
           <company>농심</company>
           <it:salenum>0.9</it:salenum>
           <it:figure src="img/snack2.jpg" width="100px" height="100px" alt="핫한라면"/>
+        </item>
+      </hotItem>
+    </store>
+  </region>
+  <region>
+    <!-- 남양주 -->
+    <reg_name>남양주</reg_name>
+    <store id="1">
+      <sto_name>남양주떡갈점</sto_name>
+      <manage_name age="45" sex="male">김영란</manage_name>
+      <sto_tel>031-333-1123</sto_tel>
+      <address>별산리 145-1</address>
+      <em:employee id="1">
+        <em:em_name age="29" sex="female">양현석</em:em_name>
+        <em:figure src="img/man1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>010-8896-1123</em:em_tel>
+        <em:workingDate>120</em:workingDate>
+        <em:workingType>평일 주간</em:workingType>
+      </em:employee>
+      <em:employee id="2">
+        <em:em_name sex="male">김계란</em:em_name>
+        <em:figure src="img/woman1.jpg" width="100px" height="100px" alt="증명사진"/>
+        <em:em_tel>031-9963-0091</em:em_tel>
+        <em:workingDate>36</em:workingDate>
+        <em:workingType>주말 야간</em:workingType>
+      </em:employee>
+      <profit>
+        <min_profit>2000</min_profit>
+        <max_profit>15</max_profit>
+      </profit>
+      <hotItem>
+        <item id ="1">
+          <it_name>오렌지쥬스</it_name>
+          <kind>Juice</kind>
+          <company>홈메이드</company>
+          <it:salenum>5</it:salenum>
+          <it:figure src="img/snack1.jpg" width="100px" height="100px" alt="핫한음료"/>
+        </item>
+        <item id="2">
+          <it_name>바나나세트</it_name>
+          <kind>과일</kind>
+          <company>홈메이드</company>
+          <it:salenum>0.2</it:salenum>
+          <it:figure src="img/snack2.jpg" width="100px" height="100px" alt="핫한과일"/>
         </item>
       </hotItem>
     </store>
